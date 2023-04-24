@@ -10,55 +10,294 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">BIKY - Модель расчетов</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        </div>
     </div>
 </nav>
 
 <div class="container my-5">
-    <h1>Hello, world!</h1>
-    <div class="col-lg-8 px-0">
-        <p class="fs-5">You've successfully loaded up the Bootstrap starter example. It includes <a href="https://getbootstrap.com/">Bootstrap 5</a> via the <a href="https://www.jsdelivr.com/package/npm/bootstrap">jsDelivr CDN</a> and includes an additional CSS and JS file for your own code.</p>
-        <p>Feel free to download or copy-and-paste any parts of this example.</p>
 
-        <hr class="col-1 my-4">
+    <h1 class="display-6">Настройки</h1>
 
-        <a href="https://getbootstrap.com" class="btn btn-primary">Read the Bootstrap docs</a>
-        <a href="https://github.com/twbs/examples" class="btn btn-secondary">View on GitHub</a>
+    <div class="row">
+        <div class="col">
+
+            <div class="card">
+                <div class="card-header text-bg-success">Настройки объявления (продавец)</div>
+                <div class="card-body">
+
+                    <form id="sellerSettings">
+
+                        <div>
+
+                            <label for="sellerType" class="form-label">Тип продавца</label>
+                            <select class="form-select" aria-label="Default select example" id="sellerType">
+                                <option value="person" selected>Частное лицо</option>
+                                <option value="shop">Магазин</option>
+                            </select>
+
+                        </div>
+
+                        <div class="pt-3">
+
+                            <label for="price" class="form-label">Цена</label>
+                            <input type="number" min="0" class="form-control" id="price" required value="10000">
+
+                        </div>
+
+                        <div class="pt-3">
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="sellerDisAssembly" checked>
+                                <label class="form-check-label" for="sellerDisAssembly">
+                                    Я беру на себя расходы на подготовку (сборку)
+                                </label>
+                            </div>
+
+                            <div class="py-2 px-4" id="sellerAssemblyPriceBlock">
+
+                                <label for="sellerAssemblyPrice" class="form-label">Стоимость подготовки к отправке</label>
+                                <input type="number" min="0" class="form-control" id="sellerAssemblyPrice" required value="300">
+
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="sellerDelivery" checked>
+                                <label class="form-check-label" for="sellerDelivery">
+                                    Я беру на себя расходы на пересылку службой доставки
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="sellerAssembly" checked>
+                                <label class="form-check-label" for="sellerAssembly">
+                                    Я беру на себя расходы на сборку на стороне покупателя
+                                </label>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <div>&nbsp;</div>
+
+            <div class="card">
+                <div class="card-header text-bg-success">Настройки заказа (покупатель)</div>
+                <div class="card-body">
+
+                    <form id="buyerSettings">
+
+                        <div>
+
+                            <label for="buyerDelivery" class="form-label">Способ доставки</label>
+                            <select class="form-select" aria-label="Default select example" id="buyerDelivery">
+                                <option value="selfPickup" selected>Самовывоз</option>
+                                <option value="deliveryService">Служба доставки</option>
+                            </select>
+
+                        </div>
+
+                        <div class="pt-3" id="pickupPointBlock">
+
+                            <label for="buyerPickupPoint" class="form-label">Точка сборки</label>
+                            <select class="form-select" aria-label="Default select example" id="buyerPickupPoint">
+                                <option value="notSelected" selected>Не выбрана</option>
+                                <option value="selected">Выбрана</option>
+                            </select>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col">
+
+            <div class="card" id="deliverSettingBlock">
+                <div class="card-header text-bg-warning">Настройки службы доставки</div>
+                <div class="card-body">
+
+                    <form id="deliveryPrices">
+
+                        <div>
+
+                            <label for="deliveryPrice" class="form-label">Пересылка службой доставки</label>
+                            <input type="number" min="0" class="form-control" id="deliveryPrice" required value="300">
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <div id="_deliverSettingBlock">&nbsp;</div>
+
+            <div class="card" id="partnerSettingBlock">
+                <div class="card-header text-bg-warning">Настройки точки сборки</div>
+                <div class="card-body">
+
+                    <form id="pickupPointPrices">
+
+                        <div>
+
+                            <label for="partnerDeliveryPrice" class="form-label">Получение в почтовом отделении (или возврат в отделение)</label>
+                            <input type="number" min="0" class="form-control" id="partnerDeliveryPrice" required value="50">
+
+                        </div>
+
+                        <div class="pt-3">
+
+                            <label for="partnerAssemblyPrice" class="form-label">Сборка велосипеда партнером</label>
+                            <input type="number" min="0" class="form-control" id="partnerAssemblyPrice" required value="700">
+
+                        </div>
+
+                        <div class="pt-3">
+
+                            <label for="partnerDisAssemblyPrice" class="form-label">Подготовка партнером к обратной отправке</label>
+                            <input type="number" min="0" class="form-control" id="partnerDisAssemblyPrice" required value="500">
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <div id="_partnerSettingBlock">&nbsp;</div>
+
+            <div class="card">
+                <div class="card-header text-bg-warning">Настройки системы (маркетплейса)</div>
+                <div class="card-body">
+
+                    <form id="systemSettings">
+
+                        <div>
+
+                            <label for="systemCommission" class="form-label">Комиссия маркетплейса (%)</label>
+                            <input type="number" min="0" class="form-control" id="systemCommission" required value="10">
+
+                        </div>
+
+                        <div class="pt-3">
+
+                            <label for="systemPaymentCommission" class="form-label">Комиссия системы оплаты (%)</label>
+                            <input type="number" min="0" class="form-control" id="systemPaymentCommission" required value="2.5">
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <div>&nbsp;</div>
+
+            <div class="card" id="merchantSettingBlock">
+                <div class="card-header text-bg-warning">Настройки магазина (мерчанта)</div>
+                <div class="card-body">
+
+                    <form id="merchantSetting">
+
+                        <div>
+
+                            <label for="deposit" class="form-label">Задаток за товар (только магазин-мерчант)</label>
+                            <div class="row">
+                                <div class="col-4">
+                                    <select class="form-select" aria-label="Default select example" id="depositType">
+                                        <option value="percent" selected>Процент</option>
+                                        <option value="money">Сумма</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <input type="number" min="0" class="form-control" id="deposit" required value="10">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
+
+    <div>&nbsp;</div>
+    <hr />
+    <div>&nbsp;</div>
+
+    <h1 class="display-6">Решение</h1>
+
+    <div class="row">
+        <div class="col">
+
+            <div class="card" id="decisionOnDeliveryCard">
+                <div class="card-header text-bg-danger">Решение (служба доставки)</div>
+                <div class="card-body">
+
+                    <form id="decisionOnDeliverySettings">
+
+                        <div>
+
+                            <select class="form-select" aria-label="Default select example" id="decisionOnDelivery">
+                                <option value="buy" selected>Покупатель принимает решение о покупке</option>
+                                <option value="returnOnDelivery">Возвращение в отделении</option>
+                                <option value="returnAfterAssemble">Партнер принимает решение о возврате после сборки</option>
+                                <option value="technicalReturn">Покупатель принимает решение о техническом возврате</option>
+                                <option value="basicReturn">Покупатель принимает решение об отказе</option>
+                            </select>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="card" id="decisionOnSelfPickupCard">
+                <div class="card-header text-bg-danger">Решение (самовывоз)</div>
+                <div class="card-body">
+
+                    <form id="decisionOnSelfPickupSettings">
+
+                        <div>
+
+                            <select class="form-select" aria-label="Default select example" id="decision">
+                                <option value="1" selected>Покупатель принимает решение о покупке</option>
+                                <option value="2">Покупатель принимает решение об отказе</option>
+                            </select>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col"></div>
+    </div>
+
+    <div>&nbsp;</div>
+    <hr />
+    <div>&nbsp;</div>
+
+    <h1 class="display-6">Результат</h1>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 <script src="main.js"></script>
 </body>
 </html>

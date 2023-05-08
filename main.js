@@ -124,8 +124,9 @@ $(document).ready(function() {
     };
 
     var $agreementTypeDescriptions = {
-        partial: "Не нужна гарантия магазина (депозит), но нужен депозит покупателя для того, чтобы гарантировать оплату работы точки в случае отказа (не технического)",
-        full: "Не требуется вообще никакой депозит (покупателя и продавца). Этот вариант делает покупку максимально простой, как будто точка и является магазином"
+        none: "",
+        partial: "Договор предусматривает гарантии со стороны магазина оплатить работу точки по заказу из маркетплейса, если происходит отказ. Депозит со стороны магазина не нужен. Оплата через выставление счета (в конце месяца, например)",
+        full: "Не требуется вообще ничей депозит. Этот вариант делает покупку максимально простой, как будто точка и является магазином"
     };
 
     $(".trigger").change(function() {
@@ -228,6 +229,7 @@ $(document).ready(function() {
             $("#merchantSettingBlock").show();
         } else {
             $("#merchantSettingBlock").hide();
+            $("#pickupPointAgreementType").val("none");
         }
 
         $("#buyerDelivery_selfPickup").hide();
@@ -262,36 +264,37 @@ $(document).ready(function() {
             $("#decisionOnSelfPickupCard").show();
             $("#decisionOnDeliveryCard").hide();
             $("#decisionOnDeliverySelfPickupCard").hide();
-            $("#pickupPointBlock").hide();
-            $("#pickupPointAgreementBlock").hide();
+            //$("#pickupPointBlock").hide();
+            //$("#pickupPointAgreementBlock").hide();
             $("#deliverSettingBlock").hide();
             $("#partnerSettingBlock").hide();
         } else {
             $("#decisionOnSelfPickupCard").hide();
-            if ($("#buyerPickupPoint").val() == "selected") {
+            //if ($("#buyerPickupPoint").val() == "selected") {
+            if ($("#buyerDelivery").val() == "partnerPickupPoint") {
                 $("#decisionOnDeliveryCard").show();
                 $("#decisionOnDeliverySelfPickupCard").hide();
                 if ($("#sellerType").val() == "shop") {
-                    $("#pickupPointAgreementBlock").show();
-                    if ($("#pickupPointAgreement").is(":checked")) {
+                    //$("#pickupPointAgreementBlock").show();
+                    //if ($("#pickupPointAgreement").is(":checked")) {
                         $("#pickupPointAgreementTypeBlock").show();
                         $("#pickupPointAgreementTypeText").html($agreementTypeDescriptions[$("#pickupPointAgreementType").val()])
-                    } else {
-                        $("#pickupPointAgreementTypeBlock").hide();
-                    }
+                    //} else {
+                    //    $("#pickupPointAgreementTypeBlock").hide();
+                    //}
                 } else {
-                    $("#pickupPointAgreement").prop( "checked", false);
-                    $("#pickupPointAgreementBlock").hide();
+                    //$("#pickupPointAgreement").prop( "checked", false);
+                    //$("#pickupPointAgreementBlock").hide();
                 }
                 $("#partnerSettingBlock").show();
             } else {
                 $("#decisionOnDeliverySelfPickupCard").show();
                 $("#decisionOnDeliveryCard").hide();
-                $("#pickupPointAgreement").prop( "checked", false);
-                $("#pickupPointAgreementBlock").hide();
+                //$("#pickupPointAgreement").prop( "checked", false);
+                //$("#pickupPointAgreementBlock").hide();
                 $("#partnerSettingBlock").hide();
             }
-            $("#pickupPointBlock").show();
+            //$("#pickupPointBlock").show();
             $("#deliverSettingBlock").show();
         }
 
@@ -364,23 +367,48 @@ $(document).ready(function() {
 
         if ($("#buyerDelivery").val() == "deliveryService") {
 
-            if (!$("#sellerDisAssemblyIncluded").is(":checked")) {
-                $buyerFinalPrice = $adPriceWithDisAssambly;
-            }
-
             if (!$("#sellerDeliveryIncluded").is(":checked")) {
                 $deliveryFinalPrice = $deliveryPrice;
             }
 
-            if ($("#buyerPickupPoint").val() == "selected") {
-
-                if (!$("#sellerAssemblyIncluded").is(":checked")) {
-                    $assemblyFinalPrice = $partnerDeliveryPrice + $partnerAssemblyPrice;
-                }
-
+            if (!$("#sellerDisAssemblyIncluded").is(":checked")) {
+                $buyerFinalPrice = $adPriceWithDisAssambly;
             }
 
         }
+
+        if ($("#buyerDelivery").val() == "partnerPickupPoint") {
+
+            if (!$("#sellerDisAssemblyIncluded").is(":checked")) {
+                $buyerFinalPrice = $adPriceWithDisAssambly;
+            }
+
+            if (!$("#sellerAssemblyIncluded").is(":checked")) {
+                $assemblyFinalPrice = $partnerDeliveryPrice + $partnerAssemblyPrice;
+            }
+
+        }
+
+
+        // if ($("#buyerDelivery").val() == "deliveryService") {
+        //
+        //     if (!$("#sellerDisAssemblyIncluded").is(":checked")) {
+        //         $buyerFinalPrice = $adPriceWithDisAssambly;
+        //     }
+        //
+        //     if (!$("#sellerDeliveryIncluded").is(":checked")) {
+        //         $deliveryFinalPrice = $deliveryPrice;
+        //     }
+        //
+        //     if ($("#buyerPickupPoint").val() == "selected") {
+        //
+        //         if (!$("#sellerAssemblyIncluded").is(":checked")) {
+        //             $assemblyFinalPrice = $partnerDeliveryPrice + $partnerAssemblyPrice;
+        //         }
+        //
+        //     }
+        //
+        // }
 
         $("#buyerFinalPrice").html($buyerFinalPrice.toFixed(2));
 
@@ -396,10 +424,9 @@ $(document).ready(function() {
 
         // Пересылка службой доставки
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
             !$("#sellerDeliveryIncluded").is(":checked") &&
-            !$("#pickupPointAgreement").is(":checked")
+            $("#pickupPointAgreementType").val()=="none"
         ) {
             $deliverySellerDeposit = $deliveryPrice;
             //$deliverySellerDeposit += ($deliverySellerDeposit*$systemPaymentCommission/100);
@@ -408,9 +435,8 @@ $(document).ready(function() {
 
         // Получение партнером в отделении службы доставки
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
-            !$("#pickupPointAgreement").is(":checked")
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
+            $("#pickupPointAgreementType").val()=="none"
         ) {
             $pickupSellerDeposit = $partnerDeliveryPrice;
             //$pickupSellerDeposit += ($pickupSellerDeposit*$systemPaymentCommission/100);
@@ -419,9 +445,8 @@ $(document).ready(function() {
 
         // Сборка велосипеда партнером
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
-            !$("#pickupPointAgreement").is(":checked")
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
+            $("#pickupPointAgreementType").val()=="none"
         ) {
             $assemblySellerDeposit = $partnerAssemblyPrice;
             //$assemblySellerDeposit += ($assemblySellerDeposit*$systemPaymentCommission/100);
@@ -442,8 +467,7 @@ $(document).ready(function() {
 
         // Пересылка службой доставки
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
             !$("#sellerDeliveryIncluded").is(":checked") &&
             !(
                 $("#pickupPointAgreement").is(":checked") &&
@@ -457,12 +481,8 @@ $(document).ready(function() {
 
         // Получение партнером в отделении службы доставки
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
-            !(
-                $("#pickupPointAgreement").is(":checked") &&
-                $("#pickupPointAgreementType").val() == "full"
-            )
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
+            $("#pickupPointAgreementType").val()!="full"
         ) {
             $pickupBuyerDeposit = $partnerDeliveryPrice;
             //$pickupBuyerDeposit += ($pickupBuyerDeposit*$systemPaymentCommission/100);
@@ -471,12 +491,8 @@ $(document).ready(function() {
 
         // Сборка велосипеда партнером
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
-            !(
-                $("#pickupPointAgreement").is(":checked") &&
-                $("#pickupPointAgreementType").val() == "full"
-            )
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
+            $("#pickupPointAgreementType").val()!="full"
         ) {
             $assemblyBuyerDeposit = $partnerAssemblyPrice;
             //$assemblyBuyerDeposit += ($assemblyBuyerDeposit*$systemPaymentCommission/100);
@@ -485,12 +501,8 @@ $(document).ready(function() {
 
         // Возврат: Подготовка партнером к обратной отправке
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
-            !(
-                $("#pickupPointAgreement").is(":checked") &&
-                $("#pickupPointAgreementType").val() == "full"
-            )
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
+            $("#pickupPointAgreementType").val()!="full"
         ) {
             $disAssemblyBuyerDeposit = $partnerDisAssemblyPrice;
             //$disAssemblyBuyerDeposit += ($disAssemblyBuyerDeposit*$systemPaymentCommission/100);
@@ -499,12 +511,8 @@ $(document).ready(function() {
 
         // Возврат: Доставка партнером в почтовое отделение и отправка
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
-            !(
-                $("#pickupPointAgreement").is(":checked") &&
-                $("#pickupPointAgreementType").val() == "full"
-            )
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
+            $("#pickupPointAgreementType").val()!="full"
         ) {
             $dropOffBuyerDeposit = $partnerDeliveryPrice;
             //$dropOffBuyerDeposit += ($dropOffBuyerDeposit*$systemPaymentCommission/100);
@@ -513,12 +521,8 @@ $(document).ready(function() {
 
         // Возврат: Пересылка службой доставки
         if (
-            $("#buyerDelivery").val()=="deliveryService" &&
-            $("#buyerPickupPoint").val()=="selected" &&
-            !(
-                $("#pickupPointAgreement").is(":checked") &&
-                $("#pickupPointAgreementType").val() == "full"
-            )
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
+            $("#pickupPointAgreementType").val()!="full"
         ) {
             $backDeliveryBuyerDeposit = $deliveryPrice;
             //$backDeliveryBuyerDeposit += ($backDeliveryBuyerDeposit*$systemPaymentCommission/100);
@@ -574,31 +578,31 @@ $(document).ready(function() {
 
         var $decisionIndex = "A0";
 
-        if ($("#buyerDelivery").val() == "deliveryService") {
-            if ($("#buyerPickupPoint").val() == "selected") {
-                if ($("#decisionOnDelivery").val() == "buy") {
-                    $decisionIndex = "A74";
-                } else if ($("#decisionOnDelivery").val() == "returnOnDelivery") {
-                    $decisionIndex = "A70";
-                } else if ($("#decisionOnDelivery").val() == "returnAfterAssemble") {
-                    $decisionIndex = "A71";
-                } else if ($("#decisionOnDelivery").val() == "technicalReturn") {
-                    $decisionIndex = "A72";
-                } else if ($("#decisionOnDelivery").val() == "basicReturn") {
-                    $decisionIndex = "A73";
-                }
-            } else {
-                if ($("#decisionOnDeliverySelfPickup").val() == "buy") {
-                    $decisionIndex = "A74";
-                } else if ($("#decisionOnDeliverySelfPickup").val() == "returnOnDelivery") {
-                    $decisionIndex = "A77";
-                }
-            }
-        } else {
+        if ($("#buyerDelivery").val() == "selfPickup") {
             if ($("#decisionOnSelfPickUp").val() == "return") {
                 $decisionIndex = "A75";
             } else if ($("#decisionOnSelfPickUp").val() == "buy") {
                 $decisionIndex = "A76";
+            }
+        }
+        else if ($("#buyerDelivery").val() == "deliveryService") {
+            if ($("#decisionOnDeliverySelfPickup").val() == "buy") {
+                $decisionIndex = "A74";
+            } else if ($("#decisionOnDeliverySelfPickup").val() == "returnOnDelivery") {
+                $decisionIndex = "A77";
+            }
+        }
+        else if ($("#buyerDelivery").val() == "partnerPickupPoint") {
+            if ($("#decisionOnDelivery").val() == "buy") {
+                $decisionIndex = "A74";
+            } else if ($("#decisionOnDelivery").val() == "returnOnDelivery") {
+                $decisionIndex = "A70";
+            } else if ($("#decisionOnDelivery").val() == "returnAfterAssemble") {
+                $decisionIndex = "A71";
+            } else if ($("#decisionOnDelivery").val() == "technicalReturn") {
+                $decisionIndex = "A72";
+            } else if ($("#decisionOnDelivery").val() == "basicReturn") {
+                $decisionIndex = "A73";
             }
         }
 
@@ -610,31 +614,32 @@ $(document).ready(function() {
 
         var $registrationIndex = "A0";
 
-        if ($("#buyerDelivery").val() == "deliveryService") {
-            if ($("#buyerPickupPoint").val() == "selected") {
-                if ($("#decisionOnDelivery").val() == "buy") {
-                    $registrationIndex = "A84";
-                } else if ($("#decisionOnDelivery").val() == "returnOnDelivery") {
-                    $registrationIndex = "A81";
-                } else if ($("#decisionOnDelivery").val() == "returnAfterAssemble") {
-                    $registrationIndex = "A82";
-                } else if ($("#decisionOnDelivery").val() == "technicalReturn") {
-                    $registrationIndex = "A82";
-                } else if ($("#decisionOnDelivery").val() == "basicReturn") {
-                    $registrationIndex = "A83";
-                }
-            } else {
-                if ($("#decisionOnDeliverySelfPickup").val() == "buy") {
-                    $registrationIndex = "A81";
-                } else if ($("#decisionOnDeliverySelfPickup").val() == "returnOnDelivery") {
-                    $registrationIndex = "A81";
-                }
-            }
-        } else {
+        if ($("#buyerDelivery").val() == "selfPickup") {
             if ($("#decisionOnSelfPickUp").val() == "return") {
                 $registrationIndex = "A80";
             } else if ($("#decisionOnSelfPickUp").val() == "buy") {
                 $registrationIndex = "A79";
+            }
+        }
+        else if ($("#buyerDelivery").val() == "deliveryService") {
+            if ($("#decisionOnDeliverySelfPickup").val() == "buy") {
+                $registrationIndex = "A81";
+            } else if ($("#decisionOnDeliverySelfPickup").val() == "returnOnDelivery") {
+                $registrationIndex = "A81";
+            }
+
+        }
+        else if ($("#buyerDelivery").val() == "partnerPickupPoint") {
+            if ($("#decisionOnDelivery").val() == "buy") {
+                $registrationIndex = "A84";
+            } else if ($("#decisionOnDelivery").val() == "returnOnDelivery") {
+                $registrationIndex = "A81";
+            } else if ($("#decisionOnDelivery").val() == "returnAfterAssemble") {
+                $registrationIndex = "A82";
+            } else if ($("#decisionOnDelivery").val() == "technicalReturn") {
+                $registrationIndex = "A82";
+            } else if ($("#decisionOnDelivery").val() == "basicReturn") {
+                $registrationIndex = "A83";
             }
         }
 
@@ -648,9 +653,9 @@ $(document).ready(function() {
 
         if ($("#sellerType").val()=="shop") {
             if (
-                ($("#buyerDelivery").val() == "deliveryService" && $("#buyerPickupPoint").val() == "selected" && $("#decisionOnDelivery").val() == "buy")
+                ($("#buyerDelivery").val() == "partnerPickupPoint" && $("#decisionOnDelivery").val() == "buy")
                 ||
-                ($("#buyerDelivery").val() == "deliveryService" && $("#buyerPickupPoint").val() == "notSelected" && $("#decisionOnDeliverySelfPickup").val() == "buy")
+                ($("#buyerDelivery").val() == "deliveryService" && $("#decisionOnDeliverySelfPickup").val() == "buy")
                 ||
                 ($("#buyerDelivery").val() == "selfPickup" && $("#decisionOnSelfPickUp").val() == "buy")
             ) {
@@ -664,9 +669,9 @@ $(document).ready(function() {
         // Ответственность за комиссию маркета
 
         if (
-            ($("#buyerDelivery").val() == "deliveryService" && $("#buyerPickupPoint").val() == "selected" && $("#decisionOnDelivery").val() == "buy")
+            ($("#buyerDelivery").val() == "partnerPickupPoint" && $("#decisionOnDelivery").val() == "buy")
             ||
-            ($("#buyerDelivery").val() == "deliveryService" && $("#buyerPickupPoint").val() == "notSelected" && $("#decisionOnDeliverySelfPickup").val() == "buy")
+            ($("#buyerDelivery").val() == "deliveryService" && $("#decisionOnDeliverySelfPickup").val() == "buy")
             ||
             ($("#buyerDelivery").val() == "selfPickup" && $("#decisionOnSelfPickUp").val() == "buy")
         ) {
@@ -678,7 +683,7 @@ $(document).ready(function() {
 
         // Ответственность за пересылку службой доставки
 
-        if ($("#buyerDelivery").val() == "deliveryService" && $("#buyerPickupPoint").val() == "selected") {
+        if ($("#buyerDelivery").val() == "partnerPickupPoint") {
             if (!$("#sellerDeliveryIncluded").is(":checked")) {
                 if ($("#decisionOnDelivery").val()=="buy" || $("#decisionOnDelivery").val()=="basicReturn") {
                     if ($deliveryBuyerDeposit) {
@@ -696,7 +701,7 @@ $(document).ready(function() {
 
         // Ответственность за получение партнером в почтовом отделении
 
-        if ($("#buyerDelivery").val() == "deliveryService" && $("#buyerPickupPoint").val() == "selected") {
+        if ($("#buyerDelivery").val() == "partnerPickupPoint") {
 
             if (
                 $("#decisionOnDelivery").val() == "returnOnDelivery"
@@ -735,7 +740,7 @@ $(document).ready(function() {
 
         // Ответственность за сборку велосипеда партнером
 
-        if ($("#buyerDelivery").val() == "deliveryService" && $("#buyerPickupPoint").val() == "selected") {
+        if ($("#buyerDelivery").val() == "partnerPickupPoint") {
 
             if (
                 $("#decisionOnDelivery").val() == "returnAfterAssemble"
@@ -772,7 +777,7 @@ $(document).ready(function() {
 
         // Ответственность за возврат (обратная подготовка, доставка в отделение службы доставки и пересылка)
 
-        if ($("#buyerDelivery").val() == "deliveryService" && $("#buyerPickupPoint").val() == "selected") {
+        if ($("#buyerDelivery").val() == "partnerPickupPoint") {
             if ($("#decisionOnDelivery").val() == "basicReturn") {
                 if ($disAssemblyBuyerDeposit) {
                     $disAssemblyResp = "buyer";
@@ -902,7 +907,7 @@ $(document).ready(function() {
         if ($("#buyerDelivery").val()=="selfPickup" && $("#decisionOnSelfPickUp").val()=="buy") {
             $offlineDealDescriptionIndex = "A10";
             $offlineDeal = $buyerFinalPrice - $buyerMinus;
-        } else if ($("#buyerDelivery").val()=="deliveryService" && $("#buyerPickupPoint").val()=="notSelected" && $("#decisionOnDeliverySelfPickup").val()=="buy") {
+        } else if ($("#buyerDelivery").val()=="deliveryService" && $("#decisionOnDeliverySelfPickup").val()=="buy") {
             if ($("#sellerDeliveryIncluded").is(":checked")) {
                 $offlineDealDescriptionIndex = "A11";
                 $offlineDeal = $buyerFinalPrice - $buyerMinus;

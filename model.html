@@ -75,13 +75,6 @@
                                 </label>
                             </div>
 
-                            <div class="form-check ms-3" id="sellerDeliveryIncludedBlock">
-                                <input class="form-check-input trigger" type="checkbox" value="1" id="sellerDeliveryIncluded" checked>
-                                <label class="form-check-label" for="sellerDeliveryIncluded">
-                                    Я беру на себя расходы на пересылку службой доставки
-                                </label>
-                            </div>
-
                             <div class="form-check">
                                 <input class="form-check-input trigger" type="checkbox" value="1" id="sellerPickupPoint" checked>
                                 <label class="form-check-label" for="sellerPickupPoint">
@@ -102,7 +95,7 @@
 
                             <hr>
 
-                            <div class="pb-2"><strong>Подготовка к отправке:</strong></div>
+                            <div class="pb-2"><strong>Подготовка и доставка:</strong></div>
 
                             <div>
 
@@ -124,6 +117,13 @@
                                         </div>
                                     </div>
 
+                                </div>
+
+                                <div class="form-check" id="sellerDeliveryIncludedBlock">
+                                    <input class="form-check-input trigger" type="checkbox" value="1" id="sellerDeliveryIncluded" checked>
+                                    <label class="form-check-label" for="sellerDeliveryIncluded">
+                                        Я беру на себя расходы на пересылку службой доставки
+                                    </label>
                                 </div>
 
                             </div>
@@ -179,6 +179,7 @@
 
                         </div>
 
+                        <!--
                         <div class="pt-3" id="pickupPointBlock">
 
                             <div class="row">
@@ -194,7 +195,9 @@
                             </div>
 
                         </div>
+                        -->
 
+                        <!--
                         <div class="pt-3" id="pickupPointAgreementBlock">
 
                             <hr>
@@ -206,20 +209,8 @@
                                 </label>
                             </div>
 
-                            <div class="row ms-3 mt-2" id="pickupPointAgreementTypeBlock">
-                                <div class="col-3">
-                                    <label for="pickupPointAgreementType" class="form-label">Тип договора</label>
-                                </div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm trigger" aria-label="Default select example" id="pickupPointAgreementType">
-                                        <option value="partial">Частичный</option>
-                                        <option value="full" selected>Полный</option>
-                                    </select>
-                                    <div class="form-text" id="pickupPointAgreementTypeText"></div>
-                                </div>
-                            </div>
-
                         </div>
+                        -->
 
                     </form>
 
@@ -314,7 +305,26 @@
 
                             <h6 class="text-warning">Настройки магазина (мерчанта)</h6>
 
-                            <div class="pt-2">
+                            <div class="pt-3">
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="pickupPointAgreementType" class="form-label">Тип договора</label>
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-select form-select-sm trigger" aria-label="Default select example" id="pickupPointAgreementType">
+                                            <option value="none" selected>Без договора</option>
+                                            <option value="partial">Простая интеграция</option>
+                                            <option value="full">Полная интеграция с риском магазина</option>
+                                            <option value="full">Полная интеграция с риском маркетплейса</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-text" id="pickupPointAgreementTypeText"></div>
+
+                            </div>
+
+                            <div class="pt-3">
 
                                 <div class="row">
                                     <div class="col-6">

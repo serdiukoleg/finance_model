@@ -64,6 +64,7 @@ $(document).ready(function() {
     var $pickupSellerDeposit = 0
     var $assemblySellerDeposit = 0;
     var $sellerDepositTotal = 0;
+    var $sellerSystemCommission = 0;
 
     var $buyerMinus = 0;
     var $sellerMinus = 0;
@@ -114,7 +115,9 @@ $(document).ready(function() {
         A0: "-",
         A10: "Покупатель рассчитывается с продавцом на месте удобным для обеих сторон способом",
         A11: "Покупатель рассчитывается в отделении службы доставки за товар (наложенный платеж)",
-        A12: "Покупатель рассчитывается в отделении службы доставки за доставку и товар (наложенный платеж)"
+        A12: "Покупатель рассчитывается в отделении службы доставки за доставку и товар (наложенный платеж)",
+        A13: "Покупатель рассчитывается с продавцом (перевод на карту). Продавец подтверждает покупку в системе. Партнер получает уведомление и отдает заказ.",
+        A14: "Покупатель рассчитывается на точке партнера удобным для обеих сторон способом",
 
     };
 
@@ -125,8 +128,9 @@ $(document).ready(function() {
 
     var $agreementTypeDescriptions = {
         none: "",
-        partial: "Договор предусматривает гарантии со стороны магазина оплатить работу точки по заказу из маркетплейса, если происходит отказ. Депозит со стороны магазина не нужен. Оплата через выставление счета (в конце месяца, например)",
-        full: "Не требуется вообще ничей депозит. Этот вариант делает покупку максимально простой, как будто точка и является магазином"
+        partial: "По этому договору магазин обязуется оплатить работу точек сборки по его заказам и все комиссии маркета в конце месяца через выставление счета (без необходимости платить депозит при подтверждении каждого заказа). Партнерские точки в свою очередь продают товары магазина и тоже рассчитываются с магазином по договору",
+        full: "По этому договору, помимо всех гарантий простого договора, добавляется гарантия оплаты работы точки партнера в случае отказа или если заказ не забрали. В этом случае не берется",
+        partner: ""
     };
 
     $(".trigger").change(function() {
@@ -210,6 +214,7 @@ $(document).ready(function() {
         $pickupSellerDeposit = 0
         $assemblySellerDeposit = 0;
         $sellerDepositTotal = 0;
+        $sellerSystemCommission = 0;
 
         $buyerMinus = 0;
         $sellerMinus = 0;
@@ -422,6 +427,14 @@ $(document).ready(function() {
 
         // === ПРОДАВЕЦ ===
 
+        // Комиссия маркетплейса
+        if (
+            $("#buyerDelivery").val()=="partnerPickupPoint" &&
+            $("#pickupPointAgreementType").val()=="none"
+        ) {
+            $sellerSystemCommission = $systemCommissionValue;
+        }
+
         // Пересылка службой доставки
         if (
             $("#buyerDelivery").val()=="partnerPickupPoint" &&
@@ -455,8 +468,9 @@ $(document).ready(function() {
 
         // Итого
 
-        $sellerDepositTotal = $deliverySellerDeposit + $pickupSellerDeposit + $assemblySellerDeposit;
+        $sellerDepositTotal = $sellerSystemCommission + $deliverySellerDeposit + $pickupSellerDeposit + $assemblySellerDeposit;
 
+        $("#sellerSystemCommission").html($sellerSystemCommission.toFixed(2));
         $("#deliverySellerDeposit").html($deliverySellerDeposit.toFixed(2));
         $("#pickupSellerDeposit").html($pickupSellerDeposit.toFixed(2));
         $("#assemblySellerDeposit").html($assemblySellerDeposit.toFixed(2));
@@ -464,6 +478,13 @@ $(document).ready(function() {
 
 
         // === ПОКУПАТЕЛЬ ===
+
+        // Комиссия маркетплейса
+        if (
+            $("#buyerDelivery").val()!="partnerPickupPoint"
+        ) {
+            $buyerSystemCommission = $systemCommissionValue;
+        }
 
         // Пересылка службой доставки
         if (
@@ -546,9 +567,6 @@ $(document).ready(function() {
 
         */
 
-        // Комиссия маркетплейса
-
-        $buyerSystemCommission = $systemCommissionValue;
         //$buyerSystemCommission += ($buyerSystemCommission*$systemPaymentCommission/100);
 
         // Итого
@@ -669,14 +687,21 @@ $(document).ready(function() {
         // Ответственность за комиссию маркета
 
         if (
-            ($("#buyerDelivery").val() == "partnerPickupPoint" && $("#decisionOnDelivery").val() == "buy")
-            ||
+            //($("#buyerDelivery").val() == "partnerPickupPoint" && $("#decisionOnDelivery").val() == "buy")
+            //||
             ($("#buyerDelivery").val() == "deliveryService" && $("#decisionOnDeliverySelfPickup").val() == "buy")
             ||
             ($("#buyerDelivery").val() == "selfPickup" && $("#decisionOnSelfPickUp").val() == "buy")
         ) {
             if ($buyerSystemCommission) {
                 $systemCommissionResp = "buyer";
+                $systemCommissionReceiver = "system"
+            }
+        }
+
+        if ($("#buyerDelivery").val() == "partnerPickupPoint" && $("#decisionOnDelivery").val() == "buy") {
+            if ($sellerSystemCommission) {
+                $systemCommissionResp = "seller";
                 $systemCommissionReceiver = "system"
             }
         }
@@ -795,7 +820,7 @@ $(document).ready(function() {
         }
 
         $shopDepositSum = ($shopDepositResp === "buyer" ? $buyerShopDeposit : 0);
-        $systemCommissionSum = ($systemCommissionResp === "buyer" ? $buyerSystemCommission : 0);
+        $systemCommissionSum = ($systemCommissionResp === "buyer" ? $buyerSystemCommission : ($systemCommissionResp === "seller" ? $sellerSystemCommission : 0));
         $deliverySum = ($deliveryResp === "buyer" ? $deliveryBuyerDeposit : ($deliveryResp === "seller" ? $deliverySellerDeposit : 0));
         $pickupSum = ($pickupResp === "buyer" ? $pickupBuyerDeposit : ($pickupResp === "seller" ? $pickupSellerDeposit : 0));
         $assemblySum = ($assemblyResp === "buyer" ? $assemblyBuyerDeposit : ($assemblyResp === "seller" ? $assemblySellerDeposit : 0));
@@ -913,6 +938,22 @@ $(document).ready(function() {
                 $offlineDeal = $buyerFinalPrice - $buyerMinus;
             } else {
                 $offlineDealDescriptionIndex = "A12";
+                $offlineDeal = $buyerFinalPrice + $deliveryPrice - $buyerMinus;
+            }
+        } else if ($("#buyerDelivery").val() == "partnerPickupPoint" && $("#decisionOnDelivery").val()=="buy") {
+            if ($("#sellerDeliveryIncluded").is(":checked")) {
+                if ($("#pickupPointAgreementType").val()=="none") {
+                    $offlineDealDescriptionIndex = "A13";
+                } else {
+                    $offlineDealDescriptionIndex = "A14";
+                }
+                $offlineDeal = $buyerFinalPrice - $buyerMinus;
+            } else {
+                if ($("#pickupPointAgreementType").val()=="none") {
+                    $offlineDealDescriptionIndex = "A13";
+                } else {
+                    $offlineDealDescriptionIndex = "A14";
+                }
                 $offlineDeal = $buyerFinalPrice + $deliveryPrice - $buyerMinus;
             }
         }

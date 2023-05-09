@@ -315,8 +315,8 @@
                                         <select class="form-select form-select-sm trigger" aria-label="Default select example" id="pickupPointAgreementType">
                                             <option value="none" selected>Без договора</option>
                                             <option value="partial">Простая интеграция</option>
-                                            <option value="full">Полная интеграция с риском магазина</option>
-                                            <option value="full">Полная интеграция с риском маркетплейса</option>
+                                            <option value="full">Полная интеграция</option>
+                                            <option value="full">Партнерская интеграция (риски на маркетплейсе)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -337,7 +337,7 @@
                                         </select>
                                     </div>
                                     <div class="col-3">
-                                        <input type="number" min="0" class="form-control form-control-sm trigger" id="shopDeposit" required value="10">
+                                        <input type="number" min="0" class="form-control form-control-sm trigger" id="shopDeposit" required value="0">
                                     </div>
                                 </div>
 
@@ -400,6 +400,14 @@
             <div class="card">
                 <div class="card-header text-bg-danger">Депозит продавца (подтверждения заказа)</div>
                 <div class="card-body">
+                    <div class="row border-bottom bg-light">
+                        <div class="col-8">
+                            <strong>Комиссия маркетплейса</strong>
+                        </div>
+                        <div class="col text-end fw-bold text-danger" id="sellerSystemCommission">
+                            0
+                        </div>
+                    </div>
                     <div class="row border-bottom">
                         <div class="col-8">
                             Пересылка службой доставки
@@ -696,7 +704,7 @@
                                         </div>
                                         <div class="col text-end fw-bold text-primary" id="sellerPlus">0</div>
                                     </div>
-                                    <div class="row border-bottom">
+                                    <div class="row bg-light border-bottom">
                                         <div class="col-8">
                                             <strong>Покупатель</strong>
                                         </div>
@@ -715,7 +723,7 @@
                                         </div>
                                         <div class="col text-end fw-bold text-danger" id="sellerMinus">0</div>
                                     </div>
-                                    <div class="row border-bottom">
+                                    <div class="row bg-light border-bottom">
                                         <div class="col-8">
                                             <strong>Покупатель</strong>
                                         </div>
@@ -734,7 +742,7 @@
                                         </div>
                                         <div class="col text-end fw-bold text-success" id="shopIncome">0</div>
                                     </div>
-                                    <div class="row border-bottom">
+                                    <div class="row border-bottom bg-light">
                                         <div class="col-8">
                                             <strong>Маркетплейс</strong>
                                         </div>

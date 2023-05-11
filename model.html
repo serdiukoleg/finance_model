@@ -130,6 +130,56 @@
 
                         </div>
 
+                        <div>
+
+                            <hr>
+
+                            <div class="pb-2"><strong>Сборка:</strong></div>
+
+                            <div class="form-check pb-2">
+                                <input class="form-check-input" type="checkbox" value="1" id="factory_box">
+                                <label class="form-check-label" for="factory_box">
+                                    Велосипед в заводской коробке
+                                </label>
+                            </div>
+
+                            <div class="pb-3">
+                                <select class="form-select form-select-sm" aria-label="Default select example">
+                                    <option value="1" selected>Односкоростной простой велосипед (минимальное количество настроек)</option>
+                                    <option value="2">Многоскоростной простой велосипед (ободные или дисковые механические тормоза)</option>
+                                    <option value="3">Многоскоростной велосипед на дисковых гидравлических тормозах (необходима прокачка)</option>
+                                    <option value="4">Многоскоростной шоссейный велосипед, (обойные или дисковые механические тормоза)</option>
+                                    <option value="5">Многоскоростной шоссейный велосипед, (дисковые гидравлические тормоза)</option>
+                                    <option value="6">Электровелосипед односкоростной</option>
+                                    <option value="7">Электровелосипед многоскоростной</option>
+                                    <option value="8">Многоскоростной велосипед с электронной трансмиссией</option>
+                                    <option value="9">Многоскоростной шоссейный велосипед с электронной трансмиссией</option>
+                                    <option value="10">Электровелосипед многоскоростной с электронной трансмиссией</option>
+                                    <option value="11">Сняты преднее колесо, руль и сиденье (БУ)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="obmotka">
+                                <label class="form-check-label" for="obmotka">
+                                    Требуется намотать обмотку на руль
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="prokachka">
+                                <label class="form-check-label" for="prokachka">
+                                    Необходима прокачка дисковых гидравлических тормозов
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="nopedals">
+                                <label class="form-check-label" for="nopedals">
+                                    Велосипед поставляется без педалей
+                                </label>
+                            </div>
+
+                        </div>
+
                     </form>
 
                 </div>
@@ -303,7 +353,7 @@
 
                         <div id="merchantSettingBlock" class="pb-4">
 
-                            <h6 class="text-warning">Настройки магазина (мерчанта)</h6>
+                            <h6 class="text-warning">Настройки магазина</h6>
 
                             <div class="pt-3">
 
@@ -316,7 +366,7 @@
                                             <option value="none" selected>Без договора</option>
                                             <option value="partial">Простая интеграция</option>
                                             <option value="full">Полная интеграция</option>
-                                            <option value="full">Партнерская интеграция (риски на маркетплейсе)</option>
+                                            <option value="partner">Партнерская интеграция (риски на маркетплейсе)</option>
                                         </select>
                                     </div>
                                 </div>

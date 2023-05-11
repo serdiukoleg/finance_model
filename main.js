@@ -129,8 +129,8 @@ $(document).ready(function() {
     var $agreementTypeDescriptions = {
         none: "",
         partial: "По этому договору магазин обязуется оплатить работу точек сборки по его заказам и все комиссии маркета в конце месяца через выставление счета (без необходимости платить депозит при подтверждении каждого заказа). Партнерские точки в свою очередь продают товары магазина и тоже рассчитываются с магазином по договору",
-        full: "По этому договору, помимо всех гарантий простого договора, добавляется гарантия оплаты работы точки партнера в случае отказа или если заказ не забрали. В этом случае не берется",
-        partner: ""
+        full: "По этому договору, помимо всех гарантий простого договора, добавляется гарантия оплаты работы точки партнера в случае отказа или если заказ не забрали. В этом случае для покупателя максимально упрощается процедура (без депозита)",
+        partner: "Тоже самое что и полная интеграция, только гарантии на стороне маркетплейса"
     };
 
     $(".trigger").change(function() {
@@ -492,7 +492,7 @@ $(document).ready(function() {
             !$("#sellerDeliveryIncluded").is(":checked") &&
             !(
                 $("#pickupPointAgreement").is(":checked") &&
-                $("#pickupPointAgreementType").val() == "full"
+                ($("#pickupPointAgreementType").val() == "full" || $("#pickupPointAgreementType").val() == "partner")
             )
         ) {
             $deliveryBuyerDeposit = $deliveryPrice;
@@ -503,7 +503,8 @@ $(document).ready(function() {
         // Получение партнером в отделении службы доставки
         if (
             $("#buyerDelivery").val()=="partnerPickupPoint" &&
-            $("#pickupPointAgreementType").val()!="full"
+            $("#pickupPointAgreementType").val()!="full" &&
+            $("#pickupPointAgreementType").val()!="partner"
         ) {
             $pickupBuyerDeposit = $partnerDeliveryPrice;
             //$pickupBuyerDeposit += ($pickupBuyerDeposit*$systemPaymentCommission/100);
@@ -513,7 +514,8 @@ $(document).ready(function() {
         // Сборка велосипеда партнером
         if (
             $("#buyerDelivery").val()=="partnerPickupPoint" &&
-            $("#pickupPointAgreementType").val()!="full"
+            $("#pickupPointAgreementType").val()!="full" &&
+            $("#pickupPointAgreementType").val()!="partner"
         ) {
             $assemblyBuyerDeposit = $partnerAssemblyPrice;
             //$assemblyBuyerDeposit += ($assemblyBuyerDeposit*$systemPaymentCommission/100);
@@ -523,7 +525,8 @@ $(document).ready(function() {
         // Возврат: Подготовка партнером к обратной отправке
         if (
             $("#buyerDelivery").val()=="partnerPickupPoint" &&
-            $("#pickupPointAgreementType").val()!="full"
+            $("#pickupPointAgreementType").val()!="full" &&
+            $("#pickupPointAgreementType").val()!="partner"
         ) {
             $disAssemblyBuyerDeposit = $partnerDisAssemblyPrice;
             //$disAssemblyBuyerDeposit += ($disAssemblyBuyerDeposit*$systemPaymentCommission/100);
@@ -533,7 +536,8 @@ $(document).ready(function() {
         // Возврат: Доставка партнером в почтовое отделение и отправка
         if (
             $("#buyerDelivery").val()=="partnerPickupPoint" &&
-            $("#pickupPointAgreementType").val()!="full"
+            $("#pickupPointAgreementType").val()!="full" &&
+            $("#pickupPointAgreementType").val()!="partner"
         ) {
             $dropOffBuyerDeposit = $partnerDeliveryPrice;
             //$dropOffBuyerDeposit += ($dropOffBuyerDeposit*$systemPaymentCommission/100);
@@ -543,7 +547,8 @@ $(document).ready(function() {
         // Возврат: Пересылка службой доставки
         if (
             $("#buyerDelivery").val()=="partnerPickupPoint" &&
-            $("#pickupPointAgreementType").val()!="full"
+            $("#pickupPointAgreementType").val()!="full" &&
+            $("#pickupPointAgreementType").val()!="partner"
         ) {
             $backDeliveryBuyerDeposit = $deliveryPrice;
             //$backDeliveryBuyerDeposit += ($backDeliveryBuyerDeposit*$systemPaymentCommission/100);
